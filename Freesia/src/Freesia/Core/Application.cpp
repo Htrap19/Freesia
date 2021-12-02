@@ -7,13 +7,18 @@
 namespace Freesia
 {
     Application::Application()
-    {}
+    {
+        m_Window = Window::Create();
+    }
 
     Application::~Application()
     {}
 
     void Application::Run()
     {
-        while(true);
+        while(m_Running)
+        {
+            m_Window->OnUpdate();
+        }
     }
 }

@@ -5,6 +5,8 @@
 #ifndef FREESIA_APPLICATION_H
 #define FREESIA_APPLICATION_H
 
+#include <Freesia/Core/Window.h>
+
 namespace Freesia
 {
     class Application
@@ -14,6 +16,10 @@ namespace Freesia
         ~Application();
 
         void Run();
+
+    private:
+        Scope<Window> m_Window;
+        bool m_Running = true;
     };
 
     Application* CreateApplication();
