@@ -5,7 +5,7 @@
 #ifndef FREESIA_X11WINDOW_H
 #define FREESIA_X11WINDOW_H
 
-#include <Freesia/Core/Window.h>
+#include "Freesia/Core/Window.h"
 
 struct GLFWwindow;
 
@@ -22,6 +22,9 @@ namespace Freesia
 
         void OnUpdate() override;
 
+        inline void SetEventCallback(const EventCallbackFn &fn) override { m_Data.EventCallback = fn; }
+        inline void* GetNativeWindow() const override { return m_Window; }
+
     private:
         void Init(const WindowProps& props);
         void Shutdown();
@@ -33,6 +36,8 @@ namespace Freesia
         {
             std::string Title;
             uint32_t Width, Height;
+
+            EventCallbackFn EventCallback;
         };
 
         WindowData m_Data;

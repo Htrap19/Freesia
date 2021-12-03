@@ -7,7 +7,9 @@
 
 #include <string>
 #include <utility>
-#include <Freesia/Core/Core.h>
+
+#include "Freesia/Core/Core.h"
+#include "Freesia/Events/Event.h"
 
 namespace Freesia
 {
@@ -24,12 +26,18 @@ namespace Freesia
     class Window
     {
     public:
+        using EventCallbackFn = std::function<void(Event&)>;
+
+    public:
         virtual ~Window() = default;
 
         virtual uint32_t GetWidth() const = 0;
         virtual uint32_t GetHeight() const = 0;
 
         virtual void OnUpdate() = 0;
+
+        virtual void SetEventCallback(const EventCallbackFn&) = 0;
+        virtual void* GetNativeWindow() const = 0;
 
         static Scope<Window> Create(const WindowProps& props = WindowProps());
     };

@@ -5,7 +5,8 @@
 #ifndef FREESIA_APPLICATION_H
 #define FREESIA_APPLICATION_H
 
-#include <Freesia/Core/Window.h>
+#include "Freesia/Core/Window.h"
+#include "Freesia/Events/WindowEvent.h"
 
 namespace Freesia
 {
@@ -15,7 +16,11 @@ namespace Freesia
         Application();
         ~Application();
 
+        void OnEvent(Event& e);
         void Run();
+
+    private:
+        bool OnWindowClose(WindowClosedEvent& e);
 
     private:
         Scope<Window> m_Window;
