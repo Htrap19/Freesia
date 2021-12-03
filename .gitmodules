@@ -1,4 +1,8 @@
-
 [submodule "Freesia/vendor/glfw"]
 	path = Freesia/vendor/glfw
 	url = https://github.com/glfw/glfw.git
+	branch = master
+[submodule "Freesia/vendor/spdlog"]
+	path = Freesia/vendor/spdlog
+	url = https://github.com/gabime/spdlog
+	branch = 1.x

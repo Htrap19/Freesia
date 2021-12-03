@@ -10,6 +10,8 @@
 #include "Freesia/Core/Core.h"
 #include "Freesia/Core/KeyCodes.h"
 #include "Freesia/Core/MouseCodes.h"
+#include "Freesia/Core/Log.h"
+#include "Freesia/Core/Assert.h"
 
 #include "Freesia/Events/Event.h"
 #include "Freesia/Events/KeyEvent.h"

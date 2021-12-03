@@ -7,7 +7,22 @@
 
 #include <memory>
 
+#ifdef FS_DEBUG
+    #ifdef FS_PLATFORM_UNIX
+        #include <csignal>
+        #define FS_DEBUGBREAK() raise(SIGTRAP)
+    #elif FS_PLATFORM_WINDOWS
+        #define FS_DEBUGBREAK() __debugbreak();
+    #else
+        #error "Platform doesn't support debugbreak yet!"
+    #endif
+#else
+    #define FS_DEBUGBREAK()
+#endif
+
 #define BIT(x) (1 << x)
+#define FS_EXPAND_MACRO(x) x
+#define FS_STRINGIFY_MACRO(x) #x
 
 #define FS_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
 

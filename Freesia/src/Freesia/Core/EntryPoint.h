@@ -9,6 +9,8 @@ extern Freesia::Application* Freesia::CreateApplication();
 
 int main(int argc, char* argv[])
 {
+    Freesia::Log::Init();
+
     auto app = Freesia::CreateApplication();
     app->Run();
     delete app;

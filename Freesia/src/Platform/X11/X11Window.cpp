@@ -3,10 +3,9 @@
 //
 
 #include "X11Window.h"
-
 #include "GLFW/glfw3.h"
-#include <iostream>
 
+#include "Freesia/Core/Log.h"
 #include "Freesia/Events/WindowEvent.h"
 #include "Freesia/Events/KeyEvent.h"
 #include "Freesia/Events/MouseEvent.h"
@@ -14,6 +13,11 @@
 namespace Freesia
 {
     static uint8_t s_GLFWWindowCount = 0;
+
+    static void GLFWErrorCallback(int error, const char* description)
+    {
+        FS_CORE_ERROR("GLFWError[{0}]: {1}", error, description);
+    }
 
     X11Window::X11Window(const Freesia::WindowProps &props)
     {
@@ -35,10 +39,13 @@ namespace Freesia
     {
         m_Data.Width = props.Width, m_Data.Height = props.Height, m_Data.Title = props.Title;
 
+        FS_CORE_INFO("Creating Window '{0}' ({1}, {2})", props.Title, props.Width, props.Height);
+
         if (s_GLFWWindowCount == 0)
         {
             if(!glfwInit())
-                std::cerr << "Failed to initialize GLFW!" << std::endl;
+                FS_CORE_ERROR("Failed to initialize GLFW!");
+            glfwSetErrorCallback(GLFWErrorCallback);
         }
 
         m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), nullptr, nullptr);

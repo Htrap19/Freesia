@@ -3,7 +3,9 @@
 //
 
 #include "Window.h"
-#include "Platform/X11/X11Window.h"
+#ifdef FS_PLATFORM_UNIX
+    #include "Platform/X11/X11Window.h"
+#endif
 
 namespace Freesia
 {
