@@ -6,6 +6,7 @@
 #define FREESIA_APPLICATION_H
 
 #include "Freesia/Core/Window.h"
+#include "Freesia/Core/LayerStack.h"
 #include "Freesia/Events/WindowEvent.h"
 
 namespace Freesia
@@ -14,10 +15,13 @@ namespace Freesia
     {
     public:
         Application();
-        ~Application();
+        virtual ~Application() = default;
 
         void OnEvent(Event& e);
         void Run();
+
+        inline void PushLayer(Layer* layer) { layer->OnAttach(); m_LayerStack.PushLayer(layer); }
+        inline void PushOverlay(Layer* layer) { layer->OnAttach(); m_LayerStack.PushOverlay(layer); }
 
     private:
         bool OnWindowClose(WindowClosedEvent& e);
@@ -25,6 +29,11 @@ namespace Freesia
     private:
         Scope<Window> m_Window;
         bool m_Running = true;
+        LayerStack m_LayerStack;
+        TimeStep m_LastFrameTime = 0.0f;
+
+        // Single-Ton
+        static Application* s_Instance;
     };
 
     Application* CreateApplication();

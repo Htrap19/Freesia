@@ -10,7 +10,7 @@
 
 namespace Freesia::Assert
 {
-    const char* GetCurrentFileName(const char* path)
+    constexpr const char* GetCurrentFileName(const char* path)
     {
         const char* file = path;
         while (*path)
@@ -28,7 +28,7 @@ namespace Freesia::Assert
 #ifdef FS_ENABLE_ASSERT
 
     #define FS_INTERNAL_ASSERT_IMPL(type, check, msg, ...) if (!(check)) { FS##type##ERROR(msg, __VA_ARGS__); FS_DEBUGBREAK(); }
-    #define FS_INTERNAL_ASSERT_WITH_MSG(type, check, ...) FS_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: {0}, __VA_ARGS__")
+    #define FS_INTERNAL_ASSERT_WITH_MSG(type, check, ...) FS_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: {0}", __VA_ARGS__)
     #define FS_INTERNAL_ASSERT_NO_MSG(type, check) FS_INTERNAL_ASSERT_IMPL(type, check, "Assertion '{0}' failed at {1}:{2}", FS_STRINGIFY_MACRO(check), ::Freesia::Assert::GetCurrentFileName(__FILE__), __LINE__)
 
     // E.G

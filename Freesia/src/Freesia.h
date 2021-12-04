@@ -12,6 +12,9 @@
 #include "Freesia/Core/MouseCodes.h"
 #include "Freesia/Core/Log.h"
 #include "Freesia/Core/Assert.h"
+#include "Freesia/Core/Layer.h"
+#include "Freesia/Core/LayerStack.h"
+#include "Freesia/Core/Timestep.h"
 
 #include "Freesia/Events/Event.h"
 #include "Freesia/Events/KeyEvent.h"

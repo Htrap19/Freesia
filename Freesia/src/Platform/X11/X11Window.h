@@ -6,6 +6,7 @@
 #define FREESIA_X11WINDOW_H
 
 #include "Freesia/Core/Window.h"
+#include "Freesia/Renderer/GraphicsContext.h"
 
 struct GLFWwindow;
 
@@ -31,6 +32,7 @@ namespace Freesia
 
     private:
         GLFWwindow* m_Window;
+        Scope<GraphicsContext> m_Context;
 
         struct WindowData
         {
