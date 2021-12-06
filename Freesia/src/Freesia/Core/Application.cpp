@@ -51,8 +51,11 @@ namespace Freesia
             TimeStep timeStep = time - m_LastFrameTime;
             m_LastFrameTime = timeStep;
 
-            for (Layer* layer : m_LayerStack)
-                layer->OnUpdate(m_LastFrameTime);
+            if (!m_Minimized)
+            {
+                for (Layer* layer : m_LayerStack)
+                    layer->OnUpdate(m_LastFrameTime);
+            }
 
             m_Window->OnUpdate();
         }

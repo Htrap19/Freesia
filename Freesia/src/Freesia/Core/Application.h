@@ -23,6 +23,9 @@ namespace Freesia
         inline void PushLayer(Layer* layer) { layer->OnAttach(); m_LayerStack.PushLayer(layer); }
         inline void PushOverlay(Layer* layer) { layer->OnAttach(); m_LayerStack.PushOverlay(layer); }
 
+        static inline Application& Get() { return *s_Instance; }
+        inline Window& GetWindow() const { return *m_Window; }
+
     private:
         bool OnWindowClose(WindowClosedEvent& e);
         bool OnWindowResize(WindowResizedEvent& e);
