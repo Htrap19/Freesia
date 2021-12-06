@@ -23,7 +23,7 @@ namespace Freesia
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
-        virtual void OmUpdate(TimeStep ts) {}
+        virtual void OnUpdate(TimeStep ts) {}
         virtual void OnImGuiRender() {}
         virtual void OnEvent(Event& e) {}
 

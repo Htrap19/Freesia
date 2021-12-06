@@ -21,4 +21,7 @@
 #include "Freesia/Events/MouseEvent.h"
 #include "Freesia/Events/WindowEvent.h"
 
+#include "Freesia/Renderer/Renderer.h"
+#include "Freesia/Renderer/RenderCommand.h"
+
 #endif //FREESIA_FREESIA_H

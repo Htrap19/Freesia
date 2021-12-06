@@ -45,6 +45,8 @@ namespace Freesia
         {
             int success = glfwInit();
             FS_CORE_ASSERT(success, "Failed to initialize GLFW!");
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
             glfwSetErrorCallback(GLFWErrorCallback);
         }
 

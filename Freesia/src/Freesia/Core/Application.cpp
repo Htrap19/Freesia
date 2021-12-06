@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Freesia/Core/Assert.h"
+#include "Freesia/Renderer/Renderer.h"
 
 namespace Freesia
 {
@@ -19,12 +20,20 @@ namespace Freesia
 
         m_Window = Window::Create();
         m_Window->SetEventCallback(FS_BIND_EVENT_FN(Application::OnEvent));
+
+        Renderer::Init();
+    }
+
+    Application::~Application()
+    {
+        Renderer::Shutdown();
     }
 
     void Application::OnEvent(Event &e)
     {
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowClosedEvent>(FS_BIND_EVENT_FN(Application::OnWindowClose));
+        dispatcher.Dispatch<WindowResizedEvent>(FS_BIND_EVENT_FN(Application::OnWindowResize));
 
         for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); it++)
         {
@@ -43,7 +52,7 @@ namespace Freesia
             m_LastFrameTime = timeStep;
 
             for (Layer* layer : m_LayerStack)
-                layer->OmUpdate(m_LastFrameTime);
+                layer->OnUpdate(m_LastFrameTime);
 
             m_Window->OnUpdate();
         }
@@ -52,6 +61,19 @@ namespace Freesia
     bool Application::OnWindowClose(WindowClosedEvent &e)
     {
         m_Running = false;
+        return false;
+    }
+
+    bool Application::OnWindowResize(WindowResizedEvent &e)
+    {
+        if (e.GetWidth() == 0 || e.GetHeight() == 0)
+        {
+            m_Minimized = true;
+            return false;
+        }
+
+        m_Minimized = false;
+        Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
         return false;
     }
 }

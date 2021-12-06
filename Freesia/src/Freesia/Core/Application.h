@@ -15,7 +15,7 @@ namespace Freesia
     {
     public:
         Application();
-        virtual ~Application() = default;
+        virtual ~Application();
 
         void OnEvent(Event& e);
         void Run();
@@ -25,10 +25,12 @@ namespace Freesia
 
     private:
         bool OnWindowClose(WindowClosedEvent& e);
+        bool OnWindowResize(WindowResizedEvent& e);
 
     private:
         Scope<Window> m_Window;
         bool m_Running = true;
+        bool m_Minimized = false;
         LayerStack m_LayerStack;
         TimeStep m_LastFrameTime = 0.0f;
 
