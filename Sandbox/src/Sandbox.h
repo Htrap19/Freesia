@@ -14,6 +14,10 @@ public:
 
     void OnAttach() override;
     void OnUpdate(Freesia::TimeStep ts) override;
+
+private:
+    Freesia::Ref<Freesia::VertexArray> m_VAO;
+    Freesia::Ref<Freesia::Shader> m_Shader;
 };
 
 #endif //FREESIA_SANDBOX_H

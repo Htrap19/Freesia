@@ -27,8 +27,15 @@ namespace Freesia
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void OpenGLRendererAPI::SetClearColor(const glm::vec4 &color)
+    void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
     {
         glClearColor(color.r, color.g, color.b, color.a);
+    }
+
+    void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount)
+    {
+        uint32_t count = !indexCount ? vertexArray->GetIndexBuffer()->GetCount() : indexCount;
+        vertexArray->Bind();
+        glDrawElements(GL_TRIANGLES, (GLsizei)count, GL_UNSIGNED_INT, nullptr);
     }
 }
