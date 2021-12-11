@@ -13,6 +13,7 @@ elseif(WIN32)
 endif()
 
 add_subdirectory(Freesia/vendor)
+add_subdirectory(Freesia)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DFS_ENABLE_ASSERT -DFS_DEBUG)
@@ -20,7 +21,6 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_definitions(-DFS_RELEASE)
 endif()
 
-include_directories(Freesia/src Freesia/vendor/glfw/include Freesia/vendor/spdlog/include Freesia/vendor/glad/include Freesia/vendor/entt/include Freesia/vendor/glm/ Freesia/vendor/stb_image)
-
-add_executable(Sandbox Freesia/vendor/glad/src/glad.c Sandbox/src/SandboxApp.cpp Freesia/src/Freesia/Core/EntryPoint.h Freesia/src/Freesia/Core/Application.cpp Freesia/src/Freesia/Core/Application.h Freesia/src/Freesia.h Freesia/src/Freesia/Core/Core.h Freesia/src/Freesia/Core/Window.cpp Freesia/src/Freesia/Core/Window.h Freesia/src/Platform/X11/X11Window.cpp Freesia/src/Platform/X11/X11Window.h Freesia/src/Freesia/Events/Event.h Freesia/src/Freesia/Events/WindowEvent.h Freesia/src/Freesia/Events/KeyEvent.h Freesia/src/Freesia/Core/KeyCodes.h Freesia/src/Freesia/Core/MouseCodes.h Freesia/src/Freesia/Events/MouseEvent.h Freesia/src/Freesia/Core/Assert.h Freesia/src/Freesia/Core/Log.h Freesia/src/Freesia/Core/Log.cpp Freesia/src/Freesia/Core/Layer.h Freesia/src/Freesia/Core/Timestep.h Freesia/src/Freesia/Core/LayerStack.cpp Freesia/src/Freesia/Core/LayerStack.h Freesia/src/Freesia/Renderer/GraphicsContext.cpp Freesia/src/Freesia/Renderer/GraphicsContext.h Freesia/src/Platform/OpenGL/OpenGLContext.cpp Freesia/src/Platform/OpenGL/OpenGLContext.h Freesia/src/Freesia/Renderer/RendererAPI.cpp Freesia/src/Freesia/Renderer/RendererAPI.h Freesia/src/Platform/OpenGL/OpenGLRendererAPI.cpp Freesia/src/Platform/OpenGL/OpenGLRendererAPI.h Freesia/src/Freesia/Renderer/RenderCommand.cpp Freesia/src/Freesia/Renderer/RenderCommand.h Freesia/src/Freesia/Renderer/Renderer.cpp Freesia/src/Freesia/Renderer/Renderer.h Sandbox/src/Sandbox.cpp Sandbox/src/Sandbox.h Freesia/src/Freesia/Core/Input.h Freesia/src/Platform/X11/X11Input.cpp Freesia/src/Freesia/Renderer/Buffer.cpp Freesia/src/Freesia/Renderer/Buffer.h Freesia/src/Platform/OpenGL/OpenGLBuffer.cpp Freesia/src/Platform/OpenGL/OpenGLBuffer.h Freesia/src/Freesia/Renderer/VertexArray.cpp Freesia/src/Freesia/Renderer/VertexArray.h Freesia/src/Platform/OpenGL/OpenGLVertexArray.cpp Freesia/src/Platform/OpenGL/OpenGLVertexArray.h Freesia/src/Freesia/Renderer/Shader.cpp Freesia/src/Freesia/Renderer/Shader.h Freesia/src/Platform/OpenGL/OpenGLShader.cpp Freesia/src/Platform/OpenGL/OpenGLShader.h Freesia/src/Freesia/Renderer/Texture.cpp Freesia/src/Freesia/Renderer/Texture.h Freesia/src/Platform/OpenGL/OpenGLTexture.cpp Freesia/src/Platform/OpenGL/OpenGLTexture.h Freesia/vendor/stb_image/stb_image.cpp)
-target_link_libraries(Sandbox PUBLIC glfw Threads::Threads)
+add_executable(Sandbox Sandbox/src/SandboxApp.cpp Sandbox/src/Sandbox.cpp Sandbox/src/Sandbox.h)
+target_include_directories(Sandbox PUBLIC Freesia/vendor/glm)
+target_link_libraries(Sandbox PUBLIC Freesia glfw Threads::Threads)
