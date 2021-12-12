@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.20)
 project(Freesia)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package( Threads )
-
 if (UNIX)
     add_definitions(-DFS_PLATFORM_UNIX)
     set(LINK_ARGS "-ldl")
@@ -12,7 +10,6 @@ elseif(WIN32)
     add_definitions(-DFS_PLATFORM_WINDOWS)
 endif()
 
-add_subdirectory(Freesia/vendor)
 add_subdirectory(Freesia)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -22,5 +19,5 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 add_executable(Sandbox Sandbox/src/SandboxApp.cpp Sandbox/src/Sandbox.cpp Sandbox/src/Sandbox.h)
-target_include_directories(Sandbox PUBLIC Freesia/vendor/glm)
-target_link_libraries(Sandbox PUBLIC Freesia glfw Threads::Threads)
+target_include_directories(Sandbox PUBLIC Freesia/src Freesia/vendor/glm Freesia/vendor/spdlog/include Freesia/vendor/imgui)
+target_link_libraries(Sandbox PUBLIC Freesia)

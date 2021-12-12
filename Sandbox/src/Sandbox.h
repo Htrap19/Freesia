@@ -14,6 +14,7 @@ public:
 
     void OnAttach() override;
     void OnUpdate(Freesia::TimeStep ts) override;
+    void OnImGuiRender() override;
 
 private:
     Freesia::Ref<Freesia::VertexArray> m_VAO;

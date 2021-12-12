@@ -22,6 +22,9 @@ namespace Freesia
         m_Window->SetEventCallback(FS_BIND_EVENT_FN(Application::OnEvent));
 
         Renderer::Init();
+
+        m_ImGuiLayer = new ImGuiLayer;
+        PushOverlay(m_ImGuiLayer);
     }
 
     Application::~Application()
@@ -56,6 +59,11 @@ namespace Freesia
                 for (Layer* layer : m_LayerStack)
                     layer->OnUpdate(m_LastFrameTime);
             }
+
+            m_ImGuiLayer->Begin();
+            for (Layer* layer : m_LayerStack)
+                layer->OnImGuiRender();
+            m_ImGuiLayer->End();
 
             m_Window->OnUpdate();
         }

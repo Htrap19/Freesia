@@ -1,17 +1,18 @@
+# glfw
 add_library(glfw STATIC
-                glfw/src/context.c
-                glfw/src/init.c
-                glfw/src/input.c
-                glfw/src/monitor.c
-                glfw/src/vulkan.c
-                glfw/src/window.c
-                glfw/src/platform.c
-                glfw/src/egl_context.c
-                glfw/src/osmesa_context.c
-                glfw/src/null_init.c
-                glfw/src/null_monitor.c
-                glfw/src/null_window.c
-                glfw/src/null_joystick.c)
+        glfw/src/context.c
+        glfw/src/init.c
+        glfw/src/input.c
+        glfw/src/monitor.c
+        glfw/src/vulkan.c
+        glfw/src/window.c
+        glfw/src/platform.c
+        glfw/src/egl_context.c
+        glfw/src/osmesa_context.c
+        glfw/src/null_init.c
+        glfw/src/null_monitor.c
+        glfw/src/null_window.c
+        glfw/src/null_joystick.c)
 if (UNIX)
     add_compile_definitions(_GLFW_X11)
     target_sources(glfw PRIVATE
@@ -37,3 +38,12 @@ elseif(WIN32)
             glfw/src/wgl_context.c)
 endif()
 target_include_directories(glfw PUBLIC glfw/include glfw/src)
+
+# imgui
+add_library(imgui STATIC
+        imgui/imgui.cpp
+        imgui/imgui_draw.cpp
+        imgui/imgui_widgets.cpp
+        imgui/imgui_tables.cpp
+        imgui/imgui_demo.cpp)
+target_include_directories(imgui PUBLIC imgui)

@@ -24,6 +24,9 @@ namespace Freesia
         void OnUpdate() override;
 
         inline void SetEventCallback(const EventCallbackFn &fn) override { m_Data.EventCallback = fn; }
+        void SetVSync(bool enabled) override;
+        inline bool IsVSync() const override { return m_Data.VSync; }
+
         inline void* GetNativeWindow() const override { return m_Window; }
 
     private:
@@ -38,6 +41,7 @@ namespace Freesia
         {
             std::string Title;
             uint32_t Width, Height;
+            bool VSync;
 
             EventCallbackFn EventCallback;
         };

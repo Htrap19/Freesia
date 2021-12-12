@@ -4,6 +4,8 @@
 
 #include "Sandbox.h"
 
+#include <imgui.h>
+
 Sandbox::Sandbox()
     : Freesia::Layer("Sandbox")
 {
@@ -40,4 +42,11 @@ void Sandbox::OnUpdate(Freesia::TimeStep ts)
 
     m_Shader->Bind();
     Freesia::RenderCommand::DrawIndexed(m_VAO);
+}
+
+void Sandbox::OnImGuiRender()
+{
+    ImGui::Begin("Hello World");
+    ImGui::Text("Hello to Dear ImGui");
+    ImGui::End();
 }

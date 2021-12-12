@@ -8,6 +8,7 @@
 #include "Freesia/Core/Window.h"
 #include "Freesia/Core/LayerStack.h"
 #include "Freesia/Events/WindowEvent.h"
+#include "Freesia/ImGui/ImGuiLayer.h"
 
 namespace Freesia
 {
@@ -36,6 +37,7 @@ namespace Freesia
         bool m_Minimized = false;
         LayerStack m_LayerStack;
         TimeStep m_LastFrameTime = 0.0f;
+        ImGuiLayer* m_ImGuiLayer;
 
         // Single-Ton
         static Application* s_Instance;
