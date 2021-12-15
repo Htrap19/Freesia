@@ -26,6 +26,9 @@ namespace Freesia
 
         static inline Application& Get() { return *s_Instance; }
         inline Window& GetWindow() const { return *m_Window; }
+        inline ImGuiLayer& GetImGuiLayer() const { return *m_ImGuiLayer; }
+
+        inline void Close() { m_Running = false; }
 
     private:
         bool OnWindowClose(WindowClosedEvent& e);

@@ -8,28 +8,13 @@
 #include "Freesia/Core/Core.h"
 #include "Freesia/Core/Log.h"
 
-namespace Freesia::Assert
-{
-    constexpr const char* GetCurrentFileName(const char* path)
-    {
-        const char* file = path;
-        while (*path)
-        {
-            if (*path == '/' || *path == '\\')
-                file = ++path;
-            else
-                path++;
-        }
-
-        return file;
-    }
-}
+#include <filesystem>
 
 #ifdef FS_ENABLE_ASSERT
 
     #define FS_INTERNAL_ASSERT_IMPL(type, check, msg, ...) if (!(check)) { FS##type##ERROR(msg, __VA_ARGS__); FS_DEBUGBREAK(); }
     #define FS_INTERNAL_ASSERT_WITH_MSG(type, check, ...) FS_INTERNAL_ASSERT_IMPL(type, check, "Assertion failed: {0}", __VA_ARGS__)
-    #define FS_INTERNAL_ASSERT_NO_MSG(type, check) FS_INTERNAL_ASSERT_IMPL(type, check, "Assertion '{0}' failed at {1}:{2}", FS_STRINGIFY_MACRO(check), ::Freesia::Assert::GetCurrentFileName(__FILE__), __LINE__)
+    #define FS_INTERNAL_ASSERT_NO_MSG(type, check) FS_INTERNAL_ASSERT_IMPL(type, check, "Assertion '{0}' failed at {1}:{2}", FS_STRINGIFY_MACRO(check), std::filesystem::path(__FILE__).filename().string(), __LINE__)
 
     // E.G
     //                check       msg

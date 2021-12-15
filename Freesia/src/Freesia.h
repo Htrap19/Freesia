@@ -28,5 +28,6 @@
 #include "Freesia/Renderer/Shader.h"
 #include "Freesia/Renderer/Texture.h"
 #include "Freesia/Renderer/VertexArray.h"
+#include "Freesia/Renderer/FrameBuffer.h"
 
 #endif //FREESIA_FREESIA_H

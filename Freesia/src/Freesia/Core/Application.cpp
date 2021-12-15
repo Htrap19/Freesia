@@ -71,7 +71,7 @@ namespace Freesia
 
     bool Application::OnWindowClose(WindowClosedEvent &e)
     {
-        m_Running = false;
+        Close();
         return false;
     }
 

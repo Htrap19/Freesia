@@ -10,13 +10,13 @@ elseif(WIN32)
     add_definitions(-DFS_PLATFORM_WINDOWS)
 endif()
 
-add_subdirectory(Freesia)
-
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DFS_ENABLE_ASSERT -DFS_DEBUG)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_definitions(-DFS_RELEASE)
 endif()
+
+add_subdirectory(Freesia)
 
 add_executable(Sandbox Sandbox/src/SandboxApp.cpp Sandbox/src/Sandbox.cpp Sandbox/src/Sandbox.h)
 target_include_directories(Sandbox PUBLIC Freesia/src Freesia/vendor/glm Freesia/vendor/spdlog/include Freesia/vendor/imgui)

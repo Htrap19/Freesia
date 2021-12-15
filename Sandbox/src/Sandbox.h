@@ -19,6 +19,11 @@ public:
 private:
     Freesia::Ref<Freesia::VertexArray> m_VAO;
     Freesia::Ref<Freesia::Shader> m_Shader;
+
+    Freesia::Ref<Freesia::FrameBuffer> m_FrameBuffer;
+
+    bool m_ViewportFocused = false, m_ViewportHovered = false;
+    glm::vec2 m_Viewport = { 0.0f, 0.0f };
 };
 
 #endif //FREESIA_SANDBOX_H
