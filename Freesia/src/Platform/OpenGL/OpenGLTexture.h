@@ -21,6 +21,7 @@ namespace Freesia
         inline uint32_t GetWidth() const override { return m_Width; }
         inline uint32_t GetHeight() const override { return m_Height; }
         inline uint32_t GetRendererID() const override { return m_RendererID; }
+        inline const std::string& GetPath() const override { return m_Path; }
 
         void SetData(void *data, size_t size) override;
         void Bind(uint32_t slot = 0) const override;

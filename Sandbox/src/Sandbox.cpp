@@ -21,26 +21,14 @@ void Sandbox::OnAttach()
     spec.Height = app.GetWindow().GetHeight();
     m_FrameBuffer = Freesia::FrameBuffer::Create(spec);
 
-    m_VAO = Freesia::VertexArray::Create();
-    m_Shader = Freesia::Shader::Create("assets/shaders/Model3D.glsl");
+    m_Scene = Freesia::CreateRef<Freesia::Scene>();
 
-    float vertices[] =
-    {
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.0f,  0.5f, 0.0f
-    };
+    m_Camera = m_Scene->CreateEntity("Camera");
+    m_Camera.AddComponent<Freesia::CameraComponent>().Camera.SetProjectionType(Freesia::SceneCamera::ProjectionType::Perspective);
 
-    uint32_t indices[] = { 0, 1, 2 };
-
-    auto vbo = Freesia::VertexBuffer::Create(vertices, sizeof(vertices));
-    vbo->SetLayout({
-        { Freesia::ShaderDataType::Float3, "a_Position" }
-    });
-    auto ibo = Freesia::IndexBuffer::Create(indices, 3);
-
-    m_VAO->AddVertexBuffer(vbo);
-    m_VAO->SetIndexBuffer(ibo);
+    m_StyledChest = m_Scene->CreateEntity("Chest");
+    m_StyledChest.AddComponent<Freesia::MeshComponent>("assets/models/stylized_treasure_chest/scene.gltf");
+    m_StyledChest.GetComponent<Freesia::TransformComponent>().Scale = glm::vec3(0.030f);
 }
 
 void Sandbox::OnUpdate(Freesia::TimeStep ts)
@@ -49,14 +37,17 @@ void Sandbox::OnUpdate(Freesia::TimeStep ts)
     if (Freesia::FrameBufferSpecification spec = m_FrameBuffer->GetSpecification();
         m_Viewport.x > 0.0f && m_Viewport.y > 0.0f &&
         (spec.Width != (uint32_t)m_Viewport.x || spec.Height != (uint32_t)m_Viewport.y))
+    {
         m_FrameBuffer->Resize((uint32_t)m_Viewport.x, (uint32_t)m_Viewport.y);
+        m_Scene->OnViewportResize((uint32_t)m_Viewport.x, (uint32_t)m_Viewport.y);
+    }
 
     m_FrameBuffer->Bind();
     Freesia::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
     Freesia::RenderCommand::Clear();
 
-    m_Shader->Bind();
-    Freesia::RenderCommand::DrawIndexed(m_VAO);
+    m_Scene->OnUpdate(ts);
+
     m_FrameBuffer->Unbind();
 }
 
@@ -93,6 +84,7 @@ void Sandbox::OnImGuiRender()
 
     // Dockspace
     ImGuiIO& io = ImGui::GetIO();
+    auto boldFont = io.Fonts->Fonts[0];
     ImGuiStyle& style = ImGui::GetStyle();
     float minWinSizeX = style.WindowMinSize.x;
     style.WindowMinSize.x = 330.0f;
@@ -132,9 +124,16 @@ void Sandbox::OnImGuiRender()
     ImGui::End();
     ImGui::PopStyleVar();
 
-    ImGui::Begin("Testing");
-    ImGui::Text("Hello World");
-    ImGui::Button("Click me");
+    ImGui::Begin("Stats");
+    auto stats = Freesia::Renderer::GetStats();
+    ImGui::Text("Renderer Stats:");
+    ImGui::Separator();
+    ImGui::PushFont(boldFont);
+    ImGui::Text("Draw calls: %d", stats.DrawCalls);
+    ImGui::Text("Mesh count: %d", stats.MeshCount);
+    ImGui::Text("Vertices: %d", stats.TotalVertices);
+    ImGui::Text("Indices: %d", stats.TotalIndices);
+    ImGui::PopFont();
     ImGui::End();
 
     ImGui::End();

@@ -17,10 +17,11 @@ public:
     void OnImGuiRender() override;
 
 private:
-    Freesia::Ref<Freesia::VertexArray> m_VAO;
-    Freesia::Ref<Freesia::Shader> m_Shader;
-
     Freesia::Ref<Freesia::FrameBuffer> m_FrameBuffer;
+
+    Freesia::Ref<Freesia::Scene> m_Scene;
+    Freesia::Entity m_Camera;
+    Freesia::Entity m_StyledChest;
 
     bool m_ViewportFocused = false, m_ViewportHovered = false;
     glm::vec2 m_Viewport = { 0.0f, 0.0f };

@@ -14,3 +14,7 @@
 	path = Freesia/vendor/imgui
 	url = https://github.com/ocornut/imgui.git
 	branch = docking
+[submodule "Freesia/vendor/assimp"]
+	path = Freesia/vendor/assimp
+	url = https://github.com/assimp/assimp.git
+	branch = master
