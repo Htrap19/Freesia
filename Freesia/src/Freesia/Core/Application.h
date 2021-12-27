@@ -39,7 +39,7 @@ namespace Freesia
         bool m_Running = true;
         bool m_Minimized = false;
         LayerStack m_LayerStack;
-        TimeStep m_LastFrameTime = 0.0f;
+        float m_LastFrameTime = 0.0f;
         ImGuiLayer* m_ImGuiLayer;
 
         // Single-Ton

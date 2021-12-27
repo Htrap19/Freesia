@@ -52,12 +52,12 @@ namespace Freesia
         {
             auto time = (float)glfwGetTime();
             TimeStep timeStep = time - m_LastFrameTime;
-            m_LastFrameTime = timeStep;
+            m_LastFrameTime = time;
 
             if (!m_Minimized)
             {
                 for (Layer* layer : m_LayerStack)
-                    layer->OnUpdate(m_LastFrameTime);
+                    layer->OnUpdate(timeStep);
             }
 
             m_ImGuiLayer->Begin();

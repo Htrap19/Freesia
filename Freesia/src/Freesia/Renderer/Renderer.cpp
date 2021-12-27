@@ -108,7 +108,7 @@ namespace Freesia
         s_Data.stats.DrawCalls++;
     }
 
-    void Renderer::DrawMesh(const glm::mat4& model, const RenderMesh& mesh)
+    void Renderer::DrawMesh(const glm::mat4& model, const RenderMesh& mesh, const glm::vec4& color)
     {
         uint32_t numVertices = mesh.Vertices.size();
         uint32_t numIndices = mesh.Indices.size();
@@ -137,7 +137,7 @@ namespace Freesia
 
         auto tmpMesh = mesh;
         for (auto& vertex : tmpMesh.Vertices)
-            vertex.Model = model, vertex.TexIndex = textureIndex;
+            vertex.Model = model, vertex.TexIndex = textureIndex, vertex.Color = color;
 
         for (auto& idx : tmpMesh.Indices)
             idx = s_Data.IndexOffset + idx;

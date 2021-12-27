@@ -59,14 +59,7 @@ namespace Freesia
     glm::mat4 SceneCamera::GetView() const
     {
         if (m_ProjectionType == ProjectionType::Perspective)
-        {
-            // Temp
-            const float radius = 10.0f;
-            float camX = (float)sin(glfwGetTime()) * radius;
-            float camZ = (float)cos(glfwGetTime()) * radius;
-
-            return glm::lookAt(glm::vec3(camX, 2.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        }
+            return glm::lookAt(glm::vec3(0.0f, 2.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
         return glm::mat4(1.0f);
     }

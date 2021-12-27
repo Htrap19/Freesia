@@ -43,7 +43,7 @@ namespace Freesia
         static void EndScene();
         static void Flush();
 
-        static void DrawMesh(const glm::mat4& model, const RenderMesh& mesh);
+        static void DrawMesh(const glm::mat4& model, const RenderMesh& mesh, const glm::vec4& color);
 
         static void ResetStats();
         static Statistics GetStats();

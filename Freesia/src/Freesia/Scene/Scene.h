@@ -16,7 +16,7 @@ namespace Freesia
     {
     public:
         Scene() = default;
-        virtual ~Scene() = default;
+        virtual ~Scene();
 
         Entity CreateEntity(const std::string& name = "");
         void DestroyEntity(Entity entity);

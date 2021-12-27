@@ -73,6 +73,17 @@ namespace Freesia
         CameraComponent(const CameraComponent&) = default;
     };
 
+    struct SpriteRendererComponent
+    {
+        glm::vec4 Color;
+
+        SpriteRendererComponent() = default;
+        SpriteRendererComponent(const SpriteRendererComponent&) = default;
+        explicit SpriteRendererComponent(const glm::vec4& color)
+                : Color(color)
+        {}
+    };
+
     struct MeshComponent
     {
         AssimpEntity Mesh;

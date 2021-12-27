@@ -28,7 +28,31 @@ void Sandbox::OnAttach()
 
     m_StyledChest = m_Scene->CreateEntity("Chest");
     m_StyledChest.AddComponent<Freesia::MeshComponent>("assets/models/stylized_treasure_chest/scene.gltf");
-    m_StyledChest.GetComponent<Freesia::TransformComponent>().Scale = glm::vec3(0.030f);
+    m_StyledChest.GetComponent<Freesia::TransformComponent>().Scale = glm::vec3(0.020f);
+
+    class ModelController : public Freesia::ScriptableEntity
+    {
+    public:
+        void OnCreate() override
+        {}
+
+        void OnDestroy() override
+        {}
+
+        void OnUpdate(Freesia::TimeStep ts) override
+        {
+            auto y = glm::radians(ts * m_Speed);
+
+            auto& transComp = GetComponent<Freesia::TransformComponent>();
+            transComp.Rotation.y += y;
+            if (glm::degrees(transComp.Rotation.y) >= 360.0f)
+                transComp.Rotation.y = 0;
+        }
+
+    private:
+        const float m_Speed = 50.0f;
+    };
+    m_StyledChest.AddComponent<Freesia::NativeScriptComponent>().Bind<ModelController>();
 }
 
 void Sandbox::OnUpdate(Freesia::TimeStep ts)
@@ -133,6 +157,7 @@ void Sandbox::OnImGuiRender()
     ImGui::Text("Mesh count: %d", stats.MeshCount);
     ImGui::Text("Vertices: %d", stats.TotalVertices);
     ImGui::Text("Indices: %d", stats.TotalIndices);
+    ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     ImGui::PopFont();
     ImGui::End();
 

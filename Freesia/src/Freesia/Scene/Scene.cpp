@@ -9,6 +9,18 @@
 
 namespace Freesia
 {
+    Scene::~Scene()
+    {
+        m_Registry.view<NativeScriptComponent>().each([](auto entity, auto& ncs)
+            {
+                if (ncs.Instance)
+                {
+                    ncs.Instance->OnDestroy();
+                    ncs.DestroyScript(&ncs);
+                }
+            });
+    }
+
     Entity Scene::CreateEntity(const std::string& name)
     {
         Entity entity(m_Registry.create(), this);
@@ -62,7 +74,12 @@ namespace Freesia
                 {
                     auto [meshComp, transform] = m_Registry.get<MeshComponent, TransformComponent>(entity);
                     for (const auto& mesh : meshComp.Mesh.GetMeshes())
-                        Renderer::DrawMesh(transform.GetTransform(), mesh);
+                    {
+                        auto color = glm::vec4(1.0f);
+                        if (m_Registry.any_of<SpriteRendererComponent>(entity))
+                            color = m_Registry.get<SpriteRendererComponent>(entity).Color;
+                        Renderer::DrawMesh(transform.GetTransform(), mesh, color);
+                    }
                 }
             }
             Renderer::EndScene();
