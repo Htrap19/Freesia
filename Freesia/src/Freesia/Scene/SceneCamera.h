@@ -24,25 +24,25 @@ namespace Freesia
 
         void SetViewportSize(uint32_t width, uint32_t height);
 
-        inline void SetProjectionType(ProjectionType type) { m_ProjectionType = type; }
+        inline void SetProjectionType(ProjectionType type) { m_ProjectionType = type; RecalculateView(); }
         inline const ProjectionType GetProjectionType() const { return m_ProjectionType; }
 
-        inline void SetOrthoGraphicSize(float size) { m_OrthoGraphicSize = size; }
-        inline float GetOrthoGraphicSize() const { return m_OrthoGraphicSize; }
+        inline void SetOrthographicSize(float size) { m_OrthoGraphicSize = size; RecalculateView(); }
+        inline float GetOrthographicSize() const { return m_OrthoGraphicSize; }
 
-        inline void SetOrthoGraphicNearClip(float clip) { m_OrthoGraphicNearClip = clip; }
-        inline float GetOrthoGraphicNearClip() const { return m_OrthoGraphicNearClip; }
+        inline void SetOrthographicNearClip(float clip) { m_OrthoGraphicNearClip = clip; RecalculateView(); }
+        inline float GetOrthographicNearClip() const { return m_OrthoGraphicNearClip; }
 
-        inline void SetOrthoGraphicFarClip(float clip) { m_OrthoGraphicFarClip = clip; }
-        inline float GetOrthoGraphicFarClip() const { return m_OrthoGraphicFarClip; }
+        inline void SetOrthographicFarClip(float clip) { m_OrthoGraphicFarClip = clip; RecalculateView(); }
+        inline float GetOrthographicFarClip() const { return m_OrthoGraphicFarClip; }
 
-        inline void SetPerspectiveFOV(float fov) { m_PerspectiveFOV = fov; }
+        inline void SetPerspectiveFOV(float fov) { m_PerspectiveFOV = fov; RecalculateView(); }
         inline float GetPerspectiveFOV() const { return m_PerspectiveFOV; }
 
-        inline void SetPerspectiveNearClip(float clip) { m_PerspectiveNearClip = clip; }
+        inline void SetPerspectiveNearClip(float clip) { m_PerspectiveNearClip = clip; RecalculateView(); }
         inline float GetPerspectiveNearClip() const { return m_PerspectiveNearClip; }
 
-        inline void SetPerspectiveFarClip(float clip) { m_PerspectiveFarClip = clip; }
+        inline void SetPerspectiveFarClip(float clip) { m_PerspectiveFarClip = clip; RecalculateView(); }
         inline float GetPerspectiveFarClip() const { return m_PerspectiveFarClip; }
 
         glm::mat4 GetView() const override;

@@ -71,11 +71,12 @@ namespace Freesia
 
         CameraComponent() = default;
         CameraComponent(const CameraComponent&) = default;
+        CameraComponent(uint32_t width, uint32_t height) { Camera.SetViewportSize(width, height); }
     };
 
     struct SpriteRendererComponent
     {
-        glm::vec4 Color;
+        glm::vec4 Color = glm::vec4(1.0f);
 
         SpriteRendererComponent() = default;
         SpriteRendererComponent(const SpriteRendererComponent&) = default;

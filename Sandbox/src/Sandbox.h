@@ -6,6 +6,7 @@
 #define FREESIA_SANDBOX_H
 
 #include <Freesia.h>
+#include "Panels/SceneHierarchyPanel.h"
 
 class Sandbox : public Freesia::Layer
 {
@@ -17,7 +18,9 @@ public:
     void OnImGuiRender() override;
 
 private:
+    // Required
     Freesia::Ref<Freesia::FrameBuffer> m_FrameBuffer;
+    Freesia::SceneHierarchyPanel m_SceneHierarchyPanel;
 
     Freesia::Ref<Freesia::Scene> m_Scene;
     Freesia::Entity m_Camera;

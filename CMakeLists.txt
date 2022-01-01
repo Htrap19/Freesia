@@ -19,6 +19,6 @@ endif()
 
 add_subdirectory(Freesia)
 
-add_executable(Sandbox Sandbox/src/SandboxApp.cpp Sandbox/src/Sandbox.cpp Sandbox/src/Sandbox.h)
+add_executable(Sandbox Sandbox/src/SandboxApp.cpp Sandbox/src/Sandbox.cpp Sandbox/src/Sandbox.h Sandbox/src/Panels/SceneHierarchyPanel.cpp Sandbox/src/Panels/SceneHierarchyPanel.h)
 target_include_directories(Sandbox PUBLIC Freesia/src Freesia/vendor/glm Freesia/vendor/spdlog/include Freesia/vendor/imgui)
 target_link_libraries(Sandbox PUBLIC Freesia)

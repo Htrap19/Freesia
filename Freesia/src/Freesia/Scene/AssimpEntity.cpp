@@ -18,6 +18,8 @@ namespace Freesia
 
         m_Directory = filepath.substr(0, filepath.find_last_of('/'));
         ProcessNode(scene->mRootNode, scene);
+        m_Textures.shrink_to_fit();
+        m_Meshes.shrink_to_fit();
     }
 
     void AssimpEntity::ProcessNode(aiNode* node, const aiScene* scene)

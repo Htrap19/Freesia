@@ -57,11 +57,11 @@ namespace Freesia
         auto view = m_Registry.view<CameraComponent>();
         for (auto entity : view)
         {
-            auto cameraComp = m_Registry.get<CameraComponent>(entity);
+            auto [cameraComp, transComp] = m_Registry.get<CameraComponent, TransformComponent>(entity);
             if (cameraComp.Camera.IsPrimary)
             {
                 mainCamera = &cameraComp.Camera;
-                cameraView = cameraComp.Camera.GetView();
+                cameraView = cameraComp.Camera.GetView() * transComp.GetTransform();
             }
         }
 
