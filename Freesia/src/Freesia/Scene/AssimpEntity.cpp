@@ -77,9 +77,9 @@ namespace Freesia
 
         // Texture
         if (hasTexCoord)
-            return { vertices, indices, LoadTexture(material, aiTextureType_DIFFUSE) };
+            return { vertices, indices, LoadTexture(material, aiTextureType_DIFFUSE), mesh->mName.C_Str() };
 
-        return { vertices, indices };
+        return { vertices, indices, {}, mesh->mName.C_Str() };
     }
 
     std::vector<Ref<Texture2D>> AssimpEntity::LoadTexture(const aiMaterial* material, aiTextureType type)

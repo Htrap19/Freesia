@@ -77,7 +77,7 @@ namespace Freesia
                     {
                         auto color = glm::vec4(1.0f);
                         if (m_Registry.any_of<SpriteRendererComponent>(entity))
-                            color = m_Registry.get<SpriteRendererComponent>(entity).Color;
+                            color = m_Registry.get<SpriteRendererComponent>(entity).Color * mesh.Color;
                         Renderer::DrawMesh(transform.GetTransform(), mesh, color);
                     }
                 }

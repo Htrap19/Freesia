@@ -236,11 +236,33 @@ namespace Freesia
                     ImGui::DragFloat("Far Clip", &orthographicFarClip);
                     camera.SetOrthographicFarClip(orthographicFarClip);
                 }
+
+                ImGui::Checkbox("Fixed Aspect Ratio", &camera.FixedAspectRatio);
             });
 
         DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
             {
                 ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+            });
+
+        DrawComponent<MeshComponent>("Mesh", entity, [](MeshComponent& component)
+            {
+                for (auto& mesh : component.Mesh.GetMeshes())
+                {
+                    ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_Framed;
+                    bool opened = ImGui::TreeNodeEx(mesh.Name.c_str(), flags);
+
+                    if (opened)
+                    {
+                        ImGui::Text("Vertices: %zu", mesh.Vertices.size());
+                        ImGui::SameLine();
+                        ImGui::Text("Indices: %zu", mesh.Indices.size());
+
+                        ImGui::ColorEdit4("Color", glm::value_ptr(mesh.Color));
+
+                        ImGui::TreePop();
+                    }
+                }
             });
     }
 }

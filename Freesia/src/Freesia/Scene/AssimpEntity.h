@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <assimp/scene.h>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Freesia/Renderer/Renderer.h"
 #include "Freesia/Renderer/Texture.h"
@@ -19,9 +20,11 @@ namespace Freesia
         std::vector<Renderer::ModelVertex> Vertices;
         std::vector<uint32_t> Indices;
         std::vector<Ref<Texture2D>> Textures;
+        glm::vec4 Color;
+        std::string Name;
 
-        RenderMesh(const std::vector<Renderer::ModelVertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<Ref<Texture2D>>& textures = {})
-            : Vertices(vertices), Indices(indices), Textures(textures)
+        RenderMesh(const std::vector<Renderer::ModelVertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<Ref<Texture2D>>& textures = {}, const std::string& name = "", const glm::vec4& color = glm::vec4(1.0f))
+            : Vertices(vertices), Indices(indices), Textures(textures), Color(color), Name(name)
         {}
 
         inline bool HasTexture() const { return !Textures.empty(); }
@@ -34,6 +37,7 @@ namespace Freesia
         explicit AssimpEntity(const std::string& filepath);
 
         inline const std::vector<RenderMesh>& GetMeshes() const { return m_Meshes; }
+        inline std::vector<RenderMesh>& GetMeshes() { return m_Meshes; }
 
     protected:
         void ProcessNode(aiNode* node, const aiScene* scene);
