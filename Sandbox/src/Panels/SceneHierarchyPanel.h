@@ -26,6 +26,9 @@ namespace Freesia
         void DrawEntityNode(Entity entity);
         void DrawComponents(Entity entity);
 
+        template <typename T>
+        void AddComponent(const std::string& componentStringified);
+
     private:
         Ref<Scene> m_Context;
         Entity m_SelectedContext;

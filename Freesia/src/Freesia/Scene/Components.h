@@ -71,7 +71,6 @@ namespace Freesia
 
         CameraComponent() = default;
         CameraComponent(const CameraComponent&) = default;
-        CameraComponent(uint32_t width, uint32_t height) { Camera.SetViewportSize(width, height); }
     };
 
     struct SpriteRendererComponent

@@ -22,7 +22,10 @@ namespace Freesia
         T& AddComponent(Args&& ... args)
         {
             FS_CORE_ASSERT(!this->template HasComponent<T>(), "Entity already has component!");
-            return m_Scene->m_Registry.template emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
+
+            auto& component = m_Scene->m_Registry.template emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
+            m_Scene->template OnComponentAdded(*this, component);
+            return component;
         }
 
         template<typename T>
@@ -32,10 +35,16 @@ namespace Freesia
             return m_Scene->m_Registry.template get<T>(m_EntityHandle);
         }
 
-        template<typename T>
+        template<typename ... Args>
+        bool HasComponents()
+        {
+            return m_Scene->m_Registry.template any_of<Args...>(m_EntityHandle);
+        }
+
+        template <typename T>
         bool HasComponent()
         {
-            return m_Scene->m_Registry.template any_of<T>(m_EntityHandle);
+            return this->template HasComponents<T>();
         }
 
         template<typename T>

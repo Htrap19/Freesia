@@ -24,12 +24,11 @@ void Sandbox::OnAttach()
     m_Scene = Freesia::CreateRef<Freesia::Scene>();
 
     m_Camera = m_Scene->CreateEntity("Camera");
-    m_Camera.AddComponent<Freesia::CameraComponent>(spec.Width, spec.Height).Camera.SetProjectionType(Freesia::SceneCamera::ProjectionType::Perspective);
+    m_Camera.AddComponent<Freesia::CameraComponent>().Camera.SetProjectionType(Freesia::SceneCamera::ProjectionType::Perspective);
 
     m_StyledChest = m_Scene->CreateEntity("Chest");
     m_StyledChest.AddComponent<Freesia::MeshComponent>("assets/models/stylized_treasure_chest/scene.gltf");
     m_StyledChest.GetComponent<Freesia::TransformComponent>().Scale = glm::vec3(0.020f);
-    m_StyledChest.AddComponent<Freesia::SpriteRendererComponent>();
 
     class ModelController : public Freesia::ScriptableEntity
     {
@@ -42,6 +41,8 @@ void Sandbox::OnAttach()
 
         void OnUpdate(Freesia::TimeStep ts) override
         {
+            if (!HasComponent<Freesia::TransformComponent>()) return;
+
             auto y = glm::radians(ts * m_Speed);
 
             auto& transComp = GetComponent<Freesia::TransformComponent>();

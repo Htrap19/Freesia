@@ -15,6 +15,12 @@ namespace Freesia
         virtual ~ScriptableEntity() = default;
 
         template<typename T>
+        bool HasComponent()
+        {
+            return m_Entity.template HasComponent<T>();
+        }
+
+        template<typename T>
         T& GetComponent()
         {
             return m_Entity.GetComponent<T>();

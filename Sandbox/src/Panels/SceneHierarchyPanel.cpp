@@ -36,6 +36,14 @@ namespace Freesia
         if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
             m_SelectedContext = { entt::null, m_Context.get() };
 
+        if (ImGui::BeginPopupContextWindow(nullptr, 1, false))
+        {
+            if (ImGui::MenuItem("Create Empty Entity"))
+                m_Context->CreateEntity("Empty Entity");
+
+            ImGui::EndPopup();
+        }
+
         ImGui::End();
 
         ImGui::Begin("Properties");
@@ -56,6 +64,15 @@ namespace Freesia
         if (ImGui::IsItemClicked())
             m_SelectedContext = entity;
 
+        bool deleteEntity = false;
+        if (ImGui::BeginPopupContextItem())
+        {
+            if (ImGui::MenuItem("Delete Entity"))
+                deleteEntity = true;
+
+            ImGui::EndPopup();
+        }
+
         if (opened)
         {
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -63,6 +80,13 @@ namespace Freesia
                 ImGui::TreePop();
 
             ImGui::TreePop();
+        }
+
+        if (deleteEntity)
+        {
+            m_Context->DestroyEntity(m_SelectedContext);
+            if (m_SelectedContext == entity)
+                m_SelectedContext = { entt::null, m_Context.get() };
         }
     }
 
@@ -151,11 +175,27 @@ namespace Freesia
             ImGui::Separator();
             bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, "%s", name.c_str());
             ImGui::PopStyleVar();
+            ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
+            if (ImGui::Button("+", { lineHeight, lineHeight }))
+                ImGui::OpenPopup("ComponentSettings");
+
+            bool removeComponent = false;
+            if (ImGui::BeginPopup("ComponentSettings"))
+            {
+                if (ImGui::MenuItem("Remove Component"))
+                    removeComponent = true;
+
+                ImGui::EndPopup();
+            }
+
             if (open)
             {
                 uiFunction(component);
                 ImGui::TreePop();
             }
+
+            if (removeComponent)
+                entity.template RemoveComponent<T>();
         }
     }
 
@@ -171,6 +211,37 @@ namespace Freesia
 
         if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
             tag = std::string(buffer);
+
+        ImGui::SameLine();
+        ImGui::PushItemWidth(-1);
+
+        if (ImGui::Button("Add Component"))
+            ImGui::OpenPopup("AddComponent");
+
+        if (ImGui::BeginPopup("AddComponent"))
+        {
+            if (ImGui::MenuItem("Transform"))
+            {
+                AddComponent<TransformComponent>(FS_STRINGIFY_MACRO(TransformComponent));
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (ImGui::MenuItem("Camera"))
+            {
+                AddComponent<CameraComponent>(FS_STRINGIFY_MACRO(CameraComponent));
+                ImGui::CloseCurrentPopup();
+            }
+
+            if (ImGui::MenuItem("Sprite Renderer"))
+            {
+                AddComponent<SpriteRendererComponent>(FS_STRINGIFY_MACRO(SpriteRendererComponent));
+                ImGui::CloseCurrentPopup();
+            }
+
+            ImGui::EndPopup();
+        }
+
+        ImGui::PopItemWidth();
 
         DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
             {
@@ -242,5 +313,14 @@ namespace Freesia
             {
                 ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
             });
+    }
+
+    template<typename T>
+    void SceneHierarchyPanel::AddComponent(const std::string& componentStringified)
+    {
+        if (!m_SelectedContext.template HasComponent<T>())
+            m_SelectedContext.template AddComponent<T>();
+        else
+            FS_CORE_WARN("The entity already has {0}", componentStringified);
     }
 }
