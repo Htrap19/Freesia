@@ -77,6 +77,13 @@ namespace Freesia
         glTexImage2D(GL_TEXTURE_2D, 0, (GLint)m_InternalFormat, (GLsizei)m_Width, (GLsizei)m_Height, 0, m_DataFormat, GL_UNSIGNED_BYTE, data);
     }
 
+    void* OpenGLTexture2D::GetData()
+    {
+        GLvoid* imgData = nullptr;
+        glGetTexImage(GL_TEXTURE_2D, 0, m_DataFormat, GL_UNSIGNED_BYTE, imgData);
+        return imgData;
+    }
+
     void OpenGLTexture2D::Bind(uint32_t slot) const
     {
         glActiveTexture(GL_TEXTURE0 + slot);

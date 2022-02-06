@@ -39,7 +39,7 @@ namespace Freesia
 
         static inline RendererAPI::Api GetApi() { return RendererAPI::GetApi(); }
 
-        static void BeginScene(Camera& camera, const glm::mat4& view);
+        static void BeginScene(const Camera& camera, const glm::mat4& view);
         static void EndScene();
         static void Flush();
 

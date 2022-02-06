@@ -24,6 +24,7 @@ namespace Freesia
         inline const std::string& GetPath() const override { return m_Path; }
 
         void SetData(void *data, size_t size) override;
+        void* GetData() override;
         void Bind(uint32_t slot = 0) const override;
         inline bool operator==(const Texture &other) const override { return m_RendererID == ((OpenGLTexture2D&)other).m_RendererID; }
 

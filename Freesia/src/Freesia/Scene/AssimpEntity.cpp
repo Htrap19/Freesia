@@ -36,6 +36,8 @@ namespace Freesia
 
     RenderMesh AssimpEntity::ProcessMesh(aiMesh* mesh, const aiScene* scene)
     {
+        std::string meshName = mesh->mName.C_Str();
+
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
         bool hasTexCoord = mesh->mTextureCoords[0] != nullptr;
@@ -77,9 +79,9 @@ namespace Freesia
 
         // Texture
         if (hasTexCoord)
-            return { vertices, indices, LoadTexture(material, aiTextureType_DIFFUSE) };
+            return { meshName, vertices, indices, LoadTexture(material, aiTextureType_DIFFUSE) };
 
-        return { vertices, indices };
+        return { meshName, vertices, indices };
     }
 
     std::vector<Ref<Texture2D>> AssimpEntity::LoadTexture(const aiMaterial* material, aiTextureType type)

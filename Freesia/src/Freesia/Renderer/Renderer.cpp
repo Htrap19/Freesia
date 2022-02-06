@@ -77,7 +77,7 @@ namespace Freesia
         RenderCommand::SetViewport(0, 0, width, height);
     }
 
-    void Renderer::BeginScene(Camera& camera, const glm::mat4& view)
+    void Renderer::BeginScene(const Camera& camera, const glm::mat4& view)
     {
         ResetStats();
 

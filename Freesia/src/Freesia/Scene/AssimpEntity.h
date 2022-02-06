@@ -16,12 +16,13 @@ namespace Freesia
 {
     struct RenderMesh
     {
+        std::string Name;
         std::vector<Renderer::ModelVertex> Vertices;
         std::vector<uint32_t> Indices;
         std::vector<Ref<Texture2D>> Textures;
 
-        RenderMesh(const std::vector<Renderer::ModelVertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<Ref<Texture2D>>& textures = {})
-            : Vertices(vertices), Indices(indices), Textures(textures)
+        RenderMesh(const std::string& name, const std::vector<Renderer::ModelVertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<Ref<Texture2D>>& textures = {})
+            : Name(name), Vertices(vertices), Indices(indices), Textures(textures)
         {}
 
         inline bool HasTexture() const { return !Textures.empty(); }
@@ -32,6 +33,8 @@ namespace Freesia
     public:
         AssimpEntity() = default;
         explicit AssimpEntity(const std::string& filepath);
+
+        inline void PushMesh(const RenderMesh& mesh) { m_Meshes.push_back(mesh); }
 
         inline const std::vector<RenderMesh>& GetMeshes() const { return m_Meshes; }
 

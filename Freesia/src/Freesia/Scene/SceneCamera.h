@@ -13,7 +13,6 @@ namespace Freesia
     {
     public:
         enum class ProjectionType { Perspective = 0, OrthoGraphic = 1 };
-        bool IsPrimary = true, FixedAspectRatio = false;
 
     public:
         SceneCamera();
@@ -45,7 +44,7 @@ namespace Freesia
         inline void SetPerspectiveFarClip(float clip) { m_PerspectiveFarClip = clip; RecalculateView(); }
         inline float GetPerspectiveFarClip() const { return m_PerspectiveFarClip; }
 
-        glm::mat4 GetView() const override;
+        glm::mat4 GetViewMatrix() const override;
 
     private:
         void RecalculateView();

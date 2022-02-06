@@ -22,6 +22,8 @@ namespace Freesia
 
         void OnImGuiRender();
 
+        inline Entity GetSelectedEntity() const { return m_SelectedContext; }
+
     private:
         void DrawEntityNode(Entity entity);
         void DrawComponents(Entity entity);

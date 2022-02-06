@@ -256,7 +256,8 @@ namespace Freesia
             {
                 auto& camera = component.Camera;
 
-                ImGui::Checkbox("Primary", &camera.IsPrimary);
+                ImGui::Checkbox("Primary", &component.Primary);
+                ImGui::Checkbox("FixedAspectRatio", &component.FixedAspectRatio);
 
                 const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
                 const char* currentProjectionType = projectionTypeStrings[(int)camera.GetProjectionType()];

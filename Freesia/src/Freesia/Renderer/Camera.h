@@ -19,7 +19,7 @@ namespace Freesia
         virtual ~Camera() = default;
 
         inline const glm::mat4& GetProjection() const { return m_Projection; }
-        virtual glm::mat4 GetView() const = 0;
+        virtual glm::mat4 GetViewMatrix() const = 0;
 
     protected:
         glm::mat4 m_Projection = glm::mat4(1.0f);

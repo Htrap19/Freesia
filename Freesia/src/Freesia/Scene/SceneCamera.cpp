@@ -54,7 +54,7 @@ namespace Freesia
         }
     }
 
-    glm::mat4 SceneCamera::GetView() const
+    glm::mat4 SceneCamera::GetViewMatrix() const
     {
         if (m_ProjectionType == ProjectionType::Perspective)
             return glm::lookAt(glm::vec3(0.0f, 2.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));

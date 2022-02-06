@@ -9,6 +9,8 @@
 
 #include "Freesia/Core/Timestep.h"
 
+#include "Freesia/Renderer/EditorCamera.h"
+
 namespace Freesia
 {
     class Entity;
@@ -21,8 +23,11 @@ namespace Freesia
         Entity CreateEntity(const std::string& name = "");
         void DestroyEntity(Entity entity);
 
-        void OnUpdate(TimeStep ts);
+        void OnUpdateRuntime(TimeStep ts);
+        void OnUpdateEditor(const EditorCamera& camera, TimeStep ts);
         void OnViewportResize(uint32_t width, uint32_t height);
+
+        Entity GetPrimaryCameraEntity();
 
     private:
         template<typename T>
@@ -33,6 +38,7 @@ namespace Freesia
         uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
         friend class Entity;
+        friend class SceneSerializer;
         friend class SceneHierarchyPanel;
     };
 }

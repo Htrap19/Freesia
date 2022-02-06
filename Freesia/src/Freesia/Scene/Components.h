@@ -9,6 +9,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <string>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+
 #include "Freesia/Scene/ScriptableEntity.h"
 #include "Freesia/Scene/SceneCamera.h"
 #include "Freesia/Scene/AssimpEntity.h"
@@ -40,9 +43,7 @@ namespace Freesia
 
         glm::mat4 GetTransform() const
         {
-            glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), Rotation.x, { 1.0f, 0.0f, 0.0f })
-                    * glm::rotate(glm::mat4(1.0f), Rotation.y, { 0.0f, 1.0f, 0.0f })
-                    * glm::rotate(glm::mat4(1.0f), Rotation.z, { 0.0f, 0.0f, 1.0f });
+            glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
 
             return glm::translate(glm::mat4(1.0f), Translation)
                 * rotation
@@ -68,6 +69,7 @@ namespace Freesia
     struct CameraComponent
     {
         SceneCamera Camera;
+        bool Primary = true, FixedAspectRatio = false;
 
         CameraComponent() = default;
         CameraComponent(const CameraComponent&) = default;

@@ -36,7 +36,7 @@ namespace Freesia
         m_Registry.destroy(entity);
     }
 
-    void Scene::OnUpdate(TimeStep ts)
+    void Scene::OnUpdateRuntime(TimeStep ts)
     {
         // Update scripts
         m_Registry.view<NativeScriptComponent>().each([&](auto entity, auto& ncs)
@@ -58,10 +58,10 @@ namespace Freesia
         for (auto entity : view)
         {
             auto [cameraComp, transComp] = m_Registry.get<CameraComponent, TransformComponent>(entity);
-            if (cameraComp.Camera.IsPrimary)
+            if (cameraComp.Primary)
             {
                 mainCamera = &cameraComp.Camera;
-                cameraView = cameraComp.Camera.GetView() * transComp.GetTransform();
+                cameraView = cameraComp.Camera.GetViewMatrix() * transComp.GetTransform();
             }
         }
 
@@ -88,6 +88,28 @@ namespace Freesia
         }
     }
 
+    void Scene::OnUpdateEditor(const EditorCamera& camera, TimeStep ts)
+    {
+        Renderer::BeginScene(camera, camera.GetViewMatrix());
+
+        auto entitiesWithMesh = m_Registry.view<MeshComponent>();
+        for (auto entity : entitiesWithMesh)
+        {
+            auto meshComp = m_Registry.get<MeshComponent>(entity);
+            if (!m_Registry.any_of<TransformComponent>(entity)) continue;
+            auto transform = m_Registry.get<TransformComponent>(entity);
+            for (const auto& mesh : meshComp.Mesh.GetMeshes())
+            {
+                auto color = glm::vec4(1.0f);
+                if (m_Registry.any_of<SpriteRendererComponent>(entity))
+                    color = m_Registry.get<SpriteRendererComponent>(entity).Color;
+                Renderer::DrawMesh(transform.GetTransform(), mesh, color);
+            }
+        }
+
+        Renderer::EndScene();
+    }
+
     void Scene::OnViewportResize(uint32_t width, uint32_t height)
     {
         m_ViewportWidth = width, m_ViewportHeight = height;
@@ -97,9 +119,22 @@ namespace Freesia
         for (auto entity : view)
         {
             auto& cameraComponent = m_Registry.get<CameraComponent>(entity);
-            if (!cameraComponent.Camera.FixedAspectRatio)
+            if (!cameraComponent.FixedAspectRatio)
                 cameraComponent.Camera.SetViewportSize(width, height);
         }
+    }
+
+    Entity Scene::GetPrimaryCameraEntity()
+    {
+        auto view = m_Registry.view<CameraComponent>();
+        for (auto entity : view)
+        {
+            const auto& camera = view.get<CameraComponent>(entity);
+            if (camera.Primary)
+                return { entity, this };
+        }
+
+        return { entt::null, this };
     }
 
     template<typename T>

@@ -18,3 +18,9 @@
 	path = Freesia/vendor/assimp
 	url = https://github.com/assimp/assimp.git
 	branch = master
+[submodule "Freesia/vendor/yaml_cpp"]
+	path = Freesia/vendor/yaml_cpp
+	url = https://github.com/jbeder/yaml-cpp.git
+[submodule "Freesia/vendor/imguizmo"]
+	path = Freesia/vendor/imguizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo.git

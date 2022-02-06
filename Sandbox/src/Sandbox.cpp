@@ -5,8 +5,14 @@
 #include "Sandbox.h"
 
 #include <imgui.h>
+#include <glm/gtc/type_ptr.hpp>
+#include <ImGuizmo.h>
 
 #include "Freesia/Core/Application.h"
+
+#include "Freesia/Scene/SceneSerializer.h"
+
+#include "Freesia/Math/Math.h"
 
 Sandbox::Sandbox()
     : Freesia::Layer("Sandbox")
@@ -30,33 +36,15 @@ void Sandbox::OnAttach()
     m_StyledChest.AddComponent<Freesia::MeshComponent>("assets/models/stylized_treasure_chest/scene.gltf");
     m_StyledChest.GetComponent<Freesia::TransformComponent>().Scale = glm::vec3(0.020f);
 
-    class ModelController : public Freesia::ScriptableEntity
-    {
-    public:
-        void OnCreate() override
-        {}
-
-        void OnDestroy() override
-        {}
-
-        void OnUpdate(Freesia::TimeStep ts) override
-        {
-            if (!HasComponent<Freesia::TransformComponent>()) return;
-
-            auto y = glm::radians(ts * m_Speed);
-
-            auto& transComp = GetComponent<Freesia::TransformComponent>();
-            transComp.Rotation.y += y;
-            if (glm::degrees(transComp.Rotation.y) >= 360.0f)
-                transComp.Rotation.y = 0;
-        }
-
-    private:
-        const float m_Speed = 50.0f;
-    };
-    m_StyledChest.AddComponent<Freesia::NativeScriptComponent>().Bind<ModelController>();
-
     m_SceneHierarchyPanel.SetContext(m_Scene);
+}
+
+void Sandbox::OnEvent(Freesia::Event& e)
+{
+    m_EditorCamera.OnEvent(e);
+
+    Freesia::EventDispatcher dispatcher(e);
+    dispatcher.Dispatch<Freesia::KeyPressedEvent>(FS_BIND_EVENT_FN(Sandbox::OnKeyPressed));
 }
 
 void Sandbox::OnUpdate(Freesia::TimeStep ts)
@@ -67,14 +55,19 @@ void Sandbox::OnUpdate(Freesia::TimeStep ts)
         (spec.Width != (uint32_t)m_Viewport.x || spec.Height != (uint32_t)m_Viewport.y))
     {
         m_FrameBuffer->Resize((uint32_t)m_Viewport.x, (uint32_t)m_Viewport.y);
+        m_EditorCamera.SetViewportSize(m_Viewport.x, m_Viewport.y);
         m_Scene->OnViewportResize((uint32_t)m_Viewport.x, (uint32_t)m_Viewport.y);
     }
+
+    if (m_ViewportFocused)
+        m_EditorCamera.OnUpdate(ts);
 
     m_FrameBuffer->Bind();
     Freesia::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
     Freesia::RenderCommand::Clear();
 
-    m_Scene->OnUpdate(ts);
+//    m_Scene->OnUpdateRuntime(ts);
+    m_Scene->OnUpdateEditor(m_EditorCamera, ts);
 
     m_FrameBuffer->Unbind();
 }
@@ -129,6 +122,18 @@ void Sandbox::OnImGuiRender()
         {
             if (ImGui::MenuItem("Exit")) Freesia::Application::Get().Close();
 
+            if (ImGui::MenuItem("Serialize"))
+            {
+                Freesia::SceneSerializer serializer(m_Scene);
+                serializer.Serialize("assets/scenes/Example.freesia");
+            }
+
+            if (ImGui::MenuItem("Deserialize"))
+            {
+                Freesia::SceneSerializer serializer(m_Scene);
+                serializer.Deserialize("assets/scenes/Example.freesia");
+            }
+
             ImGui::EndMenu();
         }
 
@@ -143,13 +148,69 @@ void Sandbox::OnImGuiRender()
 
     m_ViewportFocused = ImGui::IsWindowFocused();
     m_ViewportHovered = ImGui::IsWindowHovered();
-    Freesia::Application::Get().GetImGuiLayer().SetBlockEvent(!m_ViewportFocused || !m_ViewportHovered);
+    Freesia::Application::Get().GetImGuiLayer().SetBlockEvent(!m_ViewportFocused && !m_ViewportHovered);
 
     ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
     m_Viewport = { viewportPanelSize.x, viewportPanelSize.y };
 
     uint64_t textureID = m_FrameBuffer->GetColorAttachmentRendererID();
     ImGui::Image(reinterpret_cast<void*>(textureID), viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
+
+    Freesia::Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+    if (selectedEntity && m_GizmoType != -1)
+    {
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetDrawlist();
+
+        auto windowWidth = (float)ImGui::GetWindowWidth();
+        auto windowHeight = (float)ImGui::GetWindowHeight();
+
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+        // Runtime camera from entity
+//        // Camera
+//        auto cameraEntity = m_Scene->GetPrimaryCameraEntity();
+//        const auto& camera = cameraEntity.GetComponent<Freesia::CameraComponent>().Camera;
+//
+//        const glm::mat4& cameraProjection = camera.GetProjection();
+//        glm::mat4 cameraView = camera.GetViewMatrix();
+
+        // Editor camera
+        const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
+        glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
+
+        // Entity transform
+        auto& tc = selectedEntity.GetComponent<Freesia::TransformComponent>();
+        glm::mat4 transform = tc.GetTransform();
+
+        // Snapping
+        bool snap = Freesia::Input::IsKeyPressed(Freesia::Key::LeftControl);
+        float snapValue = 0.5f; // Snap value for translation/scale
+        // Snap 45.0f degrees for rotation
+        if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+            snapValue = 45.0f;
+
+        float snapValues[3] = { snapValue, snapValue, snapValue };
+
+        ImGuizmo::Manipulate(glm::value_ptr(cameraView),
+                             glm::value_ptr(cameraProjection),
+                             (ImGuizmo::OPERATION)m_GizmoType,
+                             ImGuizmo::LOCAL,
+                             glm::value_ptr(transform),
+                             nullptr,
+                             snap ? snapValues : nullptr);
+
+        if (ImGuizmo::IsUsing())
+        {
+            glm::vec3 translation, rotation, scale;
+            Freesia::Math::DecomposeTransform(transform, translation, rotation, scale);
+
+            glm::vec3 deltaRotation = rotation - tc.Rotation;
+            tc.Translation = translation;
+            tc.Rotation += deltaRotation;
+            tc.Scale = scale;
+        }
+    }
 
     ImGui::End();
     ImGui::PopStyleVar();
@@ -168,4 +229,27 @@ void Sandbox::OnImGuiRender()
     ImGui::End();
 
     ImGui::End();
+}
+
+bool Sandbox::OnKeyPressed(Freesia::KeyPressedEvent& e)
+{
+    if (e.GetRepeatCount() > 0)
+        return false;
+
+    switch(e.GetKeyCode())
+    {
+        case Freesia::Key::Q: m_GizmoType = -1;
+            break;
+        case Freesia::Key::W: m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+            break;
+        case Freesia::Key::E: m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+            break;
+        case Freesia::Key::R: m_GizmoType = ImGuizmo::OPERATION::SCALE;
+            break;
+
+        default:
+            break;
+    }
+
+    return false;
 }

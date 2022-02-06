@@ -162,3 +162,12 @@ target_include_directories(assimp PUBLIC
         assimp/contrib/rapidjson/include
         assimp/contrib/unzip
         assimp/contrib/zlib)
+
+# yaml
+file(GLOB_RECURSE yaml_cpp_source_files yaml_cpp/src/*)
+add_library(yaml_cpp STATIC ${yaml_cpp_source_files})
+add_compile_definitions(YAML_CPP_STATIC_DEFINE)
+
+# imguizmo
+add_library(imguizmo STATIC imguizmo/ImGuizmo.cpp)
+target_include_directories(imguizmo PUBLIC imgui)
